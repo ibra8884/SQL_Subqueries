@@ -1,0 +1,17 @@
+-- Nested Subquery
+-- 1. Pull month level information about the first order ever placed in the orders table.
+
+/*
+SELECT MIN(DATE_TRUNC('month', occurred_at))
+FROM orders;
+*/
+
+-- 2. Use the result to find only the orders that took place in the same month and year as the first order, and
+--    then pull the average for each type of paper qty in this month (as well as the total amount spent in usd).
+
+SELECT ROUND(AVG(standard_qty),2) avg_std, ROUND(AVG(gloss_qty),2) avg_gls, ROUND(AVG(poster_qty),2) avg_post, SUM(total_amt_usd) total_usd
+FROM orders 
+WHERE DATE_TRUNC('month', occurred_at) =
+	(SELECT MIN(DATE_TRUNC('month', occurred_at))
+	FROM orders);
+
